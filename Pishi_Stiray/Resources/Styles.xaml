@@ -1,0 +1,119 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converterts="clr-namespace:Pishi_Stiray.Assets"
+    xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2">
+
+    <!--#region TextButtonSCB -->
+    <SolidColorBrush x:Key="Button.MouseOver.Background" Color="Transparent"/>
+    <SolidColorBrush x:Key="Button.MouseOver.Border" Color="Transparent"/>
+    <SolidColorBrush x:Key="Button.Pressed.Background" Color="Transparent"/>
+    <SolidColorBrush x:Key="Button.Pressed.Border" Color="Transparent"/>
+    <SolidColorBrush x:Key="Button.Disabled.Background" Color="#FFF4F4F4"/>
+    <SolidColorBrush x:Key="Button.Disabled.Border" Color="#FFADB2B5"/>
+    <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="#FF838383"/>
+    <!--#endregion-->
+
+    <!--#region DefaultButtonSCB -->
+    <SolidColorBrush x:Key="DefaultButton.MouseOver.Background" Color="#498c51"/>
+    <SolidColorBrush x:Key="DefaultButton.MouseOver.Border" Color="#FF3C7FB1"/>
+    <SolidColorBrush x:Key="DefaultButton.Pressed.Background" Color="#76e390"/>
+    <SolidColorBrush x:Key="DefaultButton.Pressed.Border" Color="#FF2C628B"/>
+    <SolidColorBrush x:Key="DefaultButton.Disabled.Background" Color="#FFF4F4F4"/>
+    <SolidColorBrush x:Key="DefaultButton.Disabled.Border" Color="#FFADB2B5"/>
+    <SolidColorBrush x:Key="DefaultButton.Disabled.Foreground" Color="#FF838383"/>
+    <!--#endregion-->
+
+    <ControlTemplate x:Key="DefaultbuttonTemplate" TargetType="{x:Type ButtonBase}">
+        <Border x:Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" SnapsToDevicePixels="true">
+            <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="Button.IsDefaulted" Value="true">
+                <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="true">
+                <Setter Property="Background" TargetName="border" Value="{StaticResource DefaultButton.MouseOver.Background}"/>
+                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource DefaultButton.MouseOver.Border}"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="true">
+                <Setter Property="Background" TargetName="border" Value="{StaticResource DefaultButton.Pressed.Background}"/>
+                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource DefaultButton.Pressed.Border}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="false">
+                <Setter Property="Background" TargetName="border" Value="{StaticResource DefaultButton.Disabled.Background}"/>
+                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource DefaultButton.Disabled.Border}"/>
+                <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource DefaultButton.Disabled.Foreground}"/>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+    <ControlTemplate x:Key="TextButtonTemplate" TargetType="{x:Type ButtonBase}">
+        <Border x:Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" SnapsToDevicePixels="true">
+            <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="Button.IsDefaulted" Value="true">
+                <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="true">
+                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.MouseOver.Background}"/>
+                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.MouseOver.Border}"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="true">
+                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Pressed.Background}"/>
+                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Pressed.Border}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="false">
+                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Disabled.Background}"/>
+                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Disabled.Border}"/>
+                <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Button.Disabled.Foreground}"/>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+    <Style x:Key="TextButtonStyle" TargetType="Button">
+        <Style.Setters>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="ContentTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <TextBlock TextDecorations="Underline" Text="{TemplateBinding Content}"/>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="#76e383"/>
+                <Setter Property="Cursor" Value="Hand"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Foreground" Value="#498c51"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style x:Key="ButtonStyle" TargetType="Button">
+        <Style.Setters>
+            <Setter Property="Background" Value="#76e383"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="16"/>
+        </Style.Setters>
+    </Style>
+    <Style x:Key="TextBoxStyle" TargetType="TextBox">
+        <Style.Setters>
+            <Setter Property="BorderBrush" Value="#76e383"/>
+            <Setter Property="BorderThickness" Value="0 0 0 2"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="FontSize" Value="12"/>
+        </Style.Setters>
+    </Style>
+    <Style x:Key="ComboBoxStyle" TargetType="ComboBox">
+        <Style.Setters>
+            <Setter Property="BorderBrush" Value="#76e383"/>
+            <Setter Property="BorderThickness" Value="0 0 0 2"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="FontSize" Value="12"/>
+        </Style.Setters>
+    </Style>
+    <converterts:ValueToTextDecorationsConverter x:Key="ValueToTextDecorationsConverter"/>
+</ResourceDictionary>
