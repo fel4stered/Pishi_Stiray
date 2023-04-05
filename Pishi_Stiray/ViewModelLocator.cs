@@ -41,11 +41,13 @@ namespace Pishi_Stiray
             services.AddTransient<AuthorizationViewModel>();
             services.AddTransient<BrowseProductViewModel>();
             services.AddTransient<RegistrationViewModel>();
+            services.AddTransient<CartViewModel>();
             
 
             services.AddSingleton<PageService>();
             services.AddSingleton<UserService>();
             services.AddSingleton<ProductService>();
+            services.AddSingleton<CartService>();
 
             _provider = services.BuildServiceProvider();
         }
@@ -53,5 +55,6 @@ namespace Pishi_Stiray
         public AuthorizationViewModel? AuthorizationViewModel => _provider?.GetRequiredService<AuthorizationViewModel>();
         public BrowseProductViewModel? BrowseProductViewModel => _provider?.GetRequiredService<BrowseProductViewModel>();
         public RegistrationViewModel? RegistrationViewModel => _provider?.GetRequiredService<RegistrationViewModel>();
+        public CartViewModel? CartViewModel => _provider?.GetRequiredService<CartViewModel>();
     }
 }

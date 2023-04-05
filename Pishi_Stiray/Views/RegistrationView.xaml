@@ -9,7 +9,7 @@
       DataContext="{Binding RegistrationViewModel, Source={StaticResource ViewModelLocator}}"
       FontFamily="Comic Sans MS"
       d:DesignHeight="750" d:DesignWidth="1300"
-      Title="Authorization">
+      Title="Registration">
 
     <Grid Background="White">
         <StackPanel  HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -70,7 +70,7 @@
                             <DataTrigger Binding="{Binding UserLogin}" Value="{x:Null}">
                                 <Setter Property="Foreground" Value="Red"/>
                             </DataTrigger>
-                            <DataTrigger Binding="{Binding LoginChecker}" Value="True">
+                            <DataTrigger Binding="{Binding LoginChecker}" Value="False">
                                 <Setter Property="Foreground" Value="Red"/>
                             </DataTrigger>
                         </Style.Triggers>

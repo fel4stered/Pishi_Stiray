@@ -21,6 +21,7 @@ namespace Pishi_Stiray.ViewModels
         private readonly ProductService _productService;
         private readonly NewSchemaContext _schemaContext;
         private readonly PageService _pageService;
+        private readonly CartService _cartService;
         public string ProfileButton { get; set; }
         public List<string> Sorts { get; set; } = new() { "По возрастанию", "По убыванию" };
         public List<string> Filters { get; set; } = new() { "Все диапазоны", "0-5%", "5-9%", "9% и более" };
@@ -51,15 +52,28 @@ namespace Pishi_Stiray.ViewModels
         }
         public string ProfileInfo { get; set; }
 
-        public BrowseProductViewModel(UserService userService, ProductService productService, NewSchemaContext schemaContext, PageService pageService)
+        public BrowseProductViewModel(UserService userService, ProductService productService, NewSchemaContext schemaContext, PageService pageService, CartService cartService)
         {
             _userService = userService;
             _productService = productService;
             _schemaContext = schemaContext;
             _pageService = pageService;
+            _cartService = cartService;
             UpdateProduct();
             Profile();
         }
+
+        public ICommand CartCommand
+        {
+            get
+            {
+                return new DelegateCommand(() =>
+                {
+                    _pageService.ChangePage(new Cart());
+                });
+            }
+        }
+
         public ICommand ProfileExit
         {
             get
@@ -79,6 +93,7 @@ namespace Pishi_Stiray.ViewModels
                 return new DelegateCommand(() =>
                 {
                     productsCart.Add(SelectedItem);
+                    _cartService.cart = productsCart;
                     CartCount = productsCart.Count;
                 });
             }

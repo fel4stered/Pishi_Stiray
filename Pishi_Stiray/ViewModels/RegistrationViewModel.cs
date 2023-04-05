@@ -51,6 +51,7 @@ namespace Pishi_Stiray.ViewModels
                 return new DelegateCommand(() =>
                 {
                     _userService.Registration(UserFName, UserName, UserSurname, UserLogin, Password);
+                    _pageService.ChangePage(new Authorization());
                 }, bool () =>
                 {
                     if (string.IsNullOrWhiteSpace(UserFName) || string.IsNullOrWhiteSpace(UserName) || string.IsNullOrWhiteSpace(UserSurname) || string.IsNullOrWhiteSpace(UserLogin) || string.IsNullOrWhiteSpace(Password))
