@@ -5,7 +5,7 @@ namespace Pishi_Stiray.Data.Models;
 
 public partial class User
 {
-    public int UserId { get; set; }
+    public int? UserId { get; set; }
 
     public string UserSurname { get; set; } = null!;
 

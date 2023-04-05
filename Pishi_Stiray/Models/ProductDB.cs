@@ -12,7 +12,7 @@ namespace Pishi_Stiray.Models
         public string Image { get; set; }
         public string DisplayedImage
         {
-            get { return Path.GetFullPath($@"Resources\Image\{Image}"); }
+            get { return ($@"pack://application:,,,/Resources/Images/{Image}"); }
         }
         public string Title { get; set; }
         public string Description { get; set; }

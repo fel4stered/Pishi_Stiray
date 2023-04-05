@@ -27,6 +27,16 @@ namespace Pishi_Stiray.ViewModels
             _userService = userService;
             _pageService = pageService;
         }
+        public ICommand RegistrationCommand
+        {
+            get
+            {
+                return new DelegateCommand(() =>
+                {
+                    _pageService.ChangePage(new RegistrationView());
+                });
+            }
+        }
         public ICommand AuthorizationCommand
         {
             get

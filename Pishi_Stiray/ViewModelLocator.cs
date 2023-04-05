@@ -40,7 +40,7 @@ namespace Pishi_Stiray
             services.AddTransient<MainWindowViewModel>();
             services.AddTransient<AuthorizationViewModel>();
             services.AddTransient<BrowseProductViewModel>();
-
+            services.AddTransient<RegistrationViewModel>();
             
 
             services.AddSingleton<PageService>();
@@ -52,5 +52,6 @@ namespace Pishi_Stiray
         public MainWindowViewModel? MainWindowViewModel => _provider?.GetRequiredService<MainWindowViewModel>();
         public AuthorizationViewModel? AuthorizationViewModel => _provider?.GetRequiredService<AuthorizationViewModel>();
         public BrowseProductViewModel? BrowseProductViewModel => _provider?.GetRequiredService<BrowseProductViewModel>();
+        public RegistrationViewModel? RegistrationViewModel => _provider?.GetRequiredService<RegistrationViewModel>();
     }
 }

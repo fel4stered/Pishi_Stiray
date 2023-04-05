@@ -3,50 +3,139 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:Pishi_Stiray.Views"
-      mc:Ignorable="d" 
+      xmlns:local="clr-namespace:Pishi_Stiray.Views" xmlns:local1="clr-namespace:Pishi_Stiray.Assets"
+      mc:Ignorable="d"
+      FontFamily="Comic Sans MS"
       DataContext="{Binding BrowseProductViewModel, Source={StaticResource ViewModelLocator}}"
-      d:DesignHeight="450" d:DesignWidth="800"
+      d:DesignHeight="750" d:DesignWidth="1300"
       Title="BrowseProduct">
 
-    <DockPanel   Background="White">
-        <WrapPanel DockPanel.Dock="Top">
-            <TextBox Text="{Binding Search, UpdateSourceTrigger=PropertyChanged}" Width="250" Style="{StaticResource TextBoxStyle}"/>
-            <ComboBox Style="{StaticResource ComboBoxStyle}" ItemsSource="{Binding Sorts}" SelectedItem="{Binding SelectedSort}" Width="160" Margin="25 0 0 0"/>
-            <ComboBox Style="{StaticResource ComboBoxStyle}" ItemsSource="{Binding Filters}" SelectedItem="{Binding SelectedFilter}" Width="160" Margin="25 0 0 0"/>
-        </WrapPanel>
-        <ListView DockPanel.Dock="Bottom"  ItemsSource="{Binding products}" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
-                <ListView.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel Orientation="Vertical"/>
-                    </ItemsPanelTemplate>
-                </ListView.ItemsPanel>
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <Grid Width="700">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="2*"/>
-                                <ColumnDefinition Width="1*"/>
-                            </Grid.ColumnDefinitions>
-                            <Image Width="100" Height="100" Source="{Binding DisplayedImage}" Grid.Column="0"/>
-                            <StackPanel Grid.Column="1">
-                                <TextBlock Text="{Binding Title}"/>
-                                <TextBlock TextWrapping="Wrap" Text="{Binding Description}"/>
-                                <TextBlock TextWrapping="Wrap" Text="{Binding Manufacturer, StringFormat={}Производитель: {0}}"/>
-                                <TextBlock TextWrapping="Wrap">
-                                    <TextBlock.Inlines>
-                                        <Run Text="Цена:"/>
-                                        <Run Text="{Binding Price, StringFormat={}{0:C}, ConverterCulture=ru-RU}"
-                                                 TextDecorations="{Binding Discount, Converter={StaticResource ValueToTextDecorationsConverter}}"/>
-                                        <Run Text="{Binding DisplayedPrice, StringFormat={}{0:C}, ConverterCulture=ru-RU, Mode=OneWay}"/>
-                                    </TextBlock.Inlines>
-                                </TextBlock>
-                            </StackPanel>
-                            <TextBlock Text="{Binding Discount, StringFormat={}Скидка: {0}%}" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-                        </Grid>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+    <DockPanel Background="White">
+        <Grid DockPanel.Dock="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <WrapPanel VerticalAlignment="Bottom" Grid.Column="0">
+                <TextBox Text="{Binding Search, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontSize="16" Width="250" Style="{StaticResource TextBoxStyle}"/>
+                <ComboBox FontSize="14" Style="{StaticResource ComboBoxStyle}" ItemsSource="{Binding Sorts}" SelectedItem="{Binding SelectedSort}" Width="160" Margin="25 0 0 0"/>
+                <ComboBox FontSize="14" Style="{StaticResource ComboBoxStyle}" ItemsSource="{Binding Filters}" SelectedItem="{Binding SelectedFilter}" Width="160" Margin="25 0 0 0"/>
+            </WrapPanel>
+            <Border Padding="10" CornerRadius="3" HorizontalAlignment="Left" Margin="0 0 0 5" VerticalAlignment="Center" Width="auto" Grid.Column="2">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#498c51"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="False">
+                                <Setter Property="Background" Value="#76e383"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <TextBlock TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"  FontWeight="Heavy" Text="{Binding CartCount, StringFormat={}Корзина:{0}}"/>
+            </Border>
+            <TextBlock FontSize="12" FontWeight="Bold" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center">
+                <TextBlock.Text>
+                    <MultiBinding StringFormat="{}{0} из {1}">
+                        <Binding Path="ProductsCount"/>
+                        <Binding Path="ProductsAllCount"/>
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+            <Border Padding="10" CornerRadius="3" HorizontalAlignment="Right" Margin="0 0 15 5" VerticalAlignment="Center" Width="auto" Grid.Column="2">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#498c51"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="False">
+                                <Setter Property="Background" Value="#76e383"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <TextBlock x:Name="ProfileInfoTB" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"  FontWeight="Heavy" Text="{Binding ProfileInfo}">
+                    <TextBlock.ContextMenu>
+                        <ContextMenu>
+                            <ContextMenu.Style>
+                                <Style TargetType="ContextMenu">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="ContextMenu">
+                                                <Border CornerRadius="3" Background="White" Padding="5" BorderBrush="#498c51" BorderThickness="1">
+                                                    <ItemsPresenter/>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ContextMenu.Style>
+                            <MenuItem Header="{Binding ProfileButton}" Command="{Binding ProfileExit}" Template="{StaticResource MenuItemTemplate}"/>
+                        </ContextMenu>
+                    </TextBlock.ContextMenu>
+                </TextBlock>
+            </Border>
+        </Grid>
+        <ListView DockPanel.Dock="Bottom" ItemsSource="{Binding products}" SelectedItem="{Binding SelectedItem}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListView.ContextMenu>
+                <ContextMenu>
+                    <ContextMenu.Style>
+                        <Style TargetType="ContextMenu">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ContextMenu">
+                                        <Border CornerRadius="3" Background="White" Padding="5" BorderBrush="#498c51" BorderThickness="1">
+                                            <ItemsPresenter/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ProfileInfo}" Value="Вы вошли как Гость">
+                                    <Setter Property="Visibility" Value="Hidden"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ContextMenu.Style>
+                    <MenuItem Template="{StaticResource MenuItemTemplate}" Header="Добавить" Command="{Binding CartAdd}"/>
+                </ContextMenu>
+            </ListView.ContextMenu>
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+            <ListView.ItemTemplate>
+                <DataTemplate >
+                    <Grid Width="620">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                        <Rectangle RadiusX="3" RadiusY="3" Grid.ColumnSpan="3" Fill="{Binding Discount, Converter={StaticResource StringToBrushConverter}}"/>
+                        <Image Width="100" Height="100" Margin="5" Source="{Binding DisplayedImage}" Grid.Column="0"/>
+                        <StackPanel VerticalAlignment="Center" Grid.Column="1">
+                            <TextBlock FontSize="14" Text="{Binding Title}" FontWeight="Bold"/>
+                            <TextBlock TextWrapping="Wrap" Text="{Binding Description}"/>
+                            <TextBlock TextWrapping="Wrap" Text="{Binding Manufacturer, StringFormat={}Производитель: {0}}"/>
+                            <TextBlock TextWrapping="Wrap">
+                                <TextBlock.Inlines>
+                                    <Run Text="Цена:"/>
+                                    <Run Text="{Binding Price, StringFormat={}{0:C}, ConverterCulture=ru-RU}"
+                                                TextDecorations="{Binding Discount, Converter={StaticResource ValueToTextDecorationsConverter}}"/>
+                                    <Run Text="{Binding DisplayedPrice, StringFormat={}{0:C}, ConverterCulture=ru-RU, Mode=OneWay}"/>
+                                </TextBlock.Inlines>
+                            </TextBlock>
+                        </StackPanel>
+                        <TextBlock x:Name="disc" Text="{Binding Discount, StringFormat={}Скидка: {0}%}" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
     </DockPanel>
 </Page>

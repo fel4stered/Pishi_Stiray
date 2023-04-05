@@ -5,11 +5,22 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Images\A346R4.jpg" />
+    <None Remove="Resources\Images\A543T6.jpg" />
+    <None Remove="Resources\Images\B730E2.jpg" />
+    <None Remove="Resources\Images\D419T7.png" />
+    <None Remove="Resources\Images\F719R5.jpg" />
+    <None Remove="Resources\Images\G278R6.png" />
+    <None Remove="Resources\Images\H452A3.png" />
     <None Remove="Resources\Images\logo.png" />
     <None Remove="Resources\Images\picture.png" />
+    <None Remove="Resources\Images\R259E6.jpg" />
+    <None Remove="Resources\Images\T564P5.jpg" />
+    <None Remove="Resources\Images\А112Т4.jpg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,8 +40,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\Images\A346R4.jpg" />
+    <Resource Include="Resources\Images\A543T6.jpg" />
+    <Resource Include="Resources\Images\B730E2.jpg" />
+    <Resource Include="Resources\Images\D419T7.png" />
+    <Resource Include="Resources\Images\F719R5.jpg" />
+    <Resource Include="Resources\Images\G278R6.png" />
+    <Resource Include="Resources\Images\H452A3.png" />
     <Resource Include="Resources\Images\logo.png" />
     <Resource Include="Resources\Images\picture.png" />
+    <Resource Include="Resources\Images\R259E6.jpg" />
+    <Resource Include="Resources\Images\T564P5.jpg" />
+    <Resource Include="Resources\Images\А112Т4.jpg" />
   </ItemGroup>
 
 </Project>

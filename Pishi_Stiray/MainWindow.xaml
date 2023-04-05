@@ -7,7 +7,8 @@
         xmlns:viewmodels="clr-namespace:Pishi_Stiray.ViewModels"
         DataContext="{Binding MainWindowViewModel, Source={StaticResource ViewModelLocator}}"
         mc:Ignorable="d"
-        Title="Пиши - стирай" Height="450" Width="800">
+        WindowStartupLocation="CenterScreen"
+        Title="Пиши - стирай" MinHeight="755" MinWidth="1300" Width="1300">
     <Frame NavigationUIVisibility="Hidden"
            Content="{Binding PageSource}"/>
 </Window>
