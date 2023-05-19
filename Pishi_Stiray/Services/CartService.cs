@@ -1,4 +1,5 @@
-﻿using Pishi_Stiray.Models;
+﻿
+using Pishi_Stiray.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace Pishi_Stiray.Services
 {
     public class CartService
     {
-        public List<ProductDB> cart { get; set; }
+        public Dictionary<ProductDB, int> cart { get; set; }
     }
 }

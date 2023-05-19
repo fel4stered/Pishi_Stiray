@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Pishi_Stiray.ViewModels
@@ -26,11 +27,11 @@ namespace Pishi_Stiray.ViewModels
         public List<string> Sorts { get; set; } = new() { "По возрастанию", "По убыванию" };
         public List<string> Filters { get; set; } = new() { "Все диапазоны", "0-5%", "5-9%", "9% и более" };
         public List<ProductDB> products { get; set; }
-        public List<ProductDB> productsCart { get; set; } = new List<ProductDB>();
-        public int CartCount { get; set; } = 0;
+        public Dictionary<ProductDB, int> productsCart { get; set; } = new Dictionary<ProductDB,int>();
+        public float? CartCount { get; set; } = 0;
         public int ProductsCount { get; set; } = 0;
         public int ProductsAllCount { get; set; } = 0;
-        public ProductDB SelectedItem
+        public ProductDB? SelectedItem
         {
             get { return GetValue<ProductDB>(); }
             set { SetValue(value); }
@@ -92,9 +93,49 @@ namespace Pishi_Stiray.ViewModels
             {
                 return new DelegateCommand(() =>
                 {
-                    productsCart.Add(SelectedItem);
+                    if (productsCart.ContainsKey(SelectedItem))
+                    {
+                        if(SelectedItem.Quantity > productsCart[SelectedItem])
+                        {
+                            int count;
+                            productsCart.TryGetValue(SelectedItem, out count);
+                            productsCart[SelectedItem] = count + 1;
+                        }
+                        else
+                        {
+                            MessageBox.Show("Товары кончились");
+                        }
+                    }
+                    else
+                    {
+                        productsCart.Add(SelectedItem, 1);
+                    }
                     _cartService.cart = productsCart;
-                    CartCount = productsCart.Count;
+                    CartCount = (float?)Math.Round((decimal)productsCart.Sum(x => x.Key.DisplayedPrice * x.Value), 2);
+                });
+            }
+        }
+
+        public ICommand CartRemove
+        {
+            get
+            {
+                return new DelegateCommand(() =>
+                {
+                    
+                    if (!productsCart.ContainsKey(SelectedItem))
+                    {
+                        MessageBox.Show("Этого товара нет в корзине");
+                    }
+                    else if (productsCart[SelectedItem] > 1)
+                    {
+                        productsCart[SelectedItem] = productsCart[SelectedItem] - 1;
+                    }
+                    else
+                    {
+                        productsCart.Remove(SelectedItem);
+                    }
+                    CartCount = (float?)Math.Round((decimal)productsCart.Sum(x => x.Key.DisplayedPrice * x.Value), 2);
                 });
             }
         }

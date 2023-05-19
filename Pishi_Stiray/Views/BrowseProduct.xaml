@@ -32,12 +32,15 @@
                             <Trigger Property="IsMouseOver" Value="False">
                                 <Setter Property="Background" Value="#76e383"/>
                             </Trigger>
+                            <DataTrigger Binding="{Binding ProfileInfo}" Value="Вы вошли как Гость">
+                                <Setter Property="Visibility" Value="Hidden"/>
+                            </DataTrigger>
                         </Style.Triggers>
                     </Style>
                 </Border.Style>
                 <Button Background="Transparent" BorderThickness="0" Command="{Binding CartCommand}">
                     <Button.Content>
-                        <TextBlock TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"  FontWeight="Heavy" Text="{Binding CartCount, StringFormat={}Корзина:{0}}"/>
+                        <TextBlock TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"  FontWeight="Heavy" Text="{Binding CartCount, StringFormat={}Корзина: {0}₽}"/>
                     </Button.Content>
                 </Button>
             </Border>
@@ -84,30 +87,16 @@
                 </TextBlock>
             </Border>
         </Grid>
-        <ListView DockPanel.Dock="Bottom" ItemsSource="{Binding products}" SelectedItem="{Binding SelectedItem}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-            <ListView.ContextMenu>
-                <ContextMenu>
-                    <ContextMenu.Style>
-                        <Style TargetType="ContextMenu">
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="ContextMenu">
-                                        <Border CornerRadius="3" Background="White" Padding="5" BorderBrush="#498c51" BorderThickness="1">
-                                            <ItemsPresenter/>
-                                        </Border>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding ProfileInfo}" Value="Вы вошли как Гость">
-                                    <Setter Property="Visibility" Value="Hidden"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ContextMenu.Style>
-                    <MenuItem Template="{StaticResource MenuItemTemplate}" Header="Добавить" Command="{Binding CartAdd}"/>
-                </ContextMenu>
-            </ListView.ContextMenu>
+        <ListView x:Name="LV" DockPanel.Dock="Bottom" ItemsSource="{Binding products}" SelectedItem="{Binding SelectedItem}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="IsSelected" Value="True"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </ListBox.ItemContainerStyle>
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel Orientation="Horizontal"/>
@@ -137,6 +126,19 @@
                             </TextBlock>
                         </StackPanel>
                         <TextBlock x:Name="disc" Text="{Binding Discount, StringFormat={}Скидка: {0}%}" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <WrapPanel  Grid.Column="2"  HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0 0 0 10">
+                            <WrapPanel.Style>
+                                <Style TargetType="WrapPanel">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ElementName=LV, Path=DataContext.ProfileInfo}" Value="Вы вошли как Гость">
+                                            <Setter Property="Visibility" Value="Hidden"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </WrapPanel.Style>
+                            <Button Content="-" Command="{Binding ElementName=LV, Path=DataContext.CartRemove}" Style="{StaticResource TextButtonStyle}" FontSize="30" Width="35" Height="35"/>
+                            <Button Content="+" Command="{Binding ElementName=LV, Path=DataContext.CartAdd}" Style="{StaticResource TextButtonStyle}" FontSize="30" Width="35" Height="35" />
+                        </WrapPanel>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>

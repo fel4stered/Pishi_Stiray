@@ -1,4 +1,5 @@
 ﻿using DevExpress.Mvvm;
+using FluentNHibernate.Utils;
 using Pishi_Stiray.Data;
 using Pishi_Stiray.Models;
 using Pishi_Stiray.Services;
@@ -23,12 +24,12 @@ namespace Pishi_Stiray.ViewModels
         public int CartCount { get; set; } = 0;
         public string ProfileInfo { get; set; }
         public string ProfileButton { get; set; }
-        public ObservableCollection<ProductDB> cart { get; set; }
+        public ObservableDictionary<ProductDB, int> cart { get; set; }
         public float? Price { get; set; }
 
-        public ProductDB SelectedItem
+        public KeyValuePair<ProductDB, int> SelectedItem
         {
-            get { return GetValue<ProductDB>(); }
+            get { return GetValue<KeyValuePair<ProductDB, int>>(); }
             set { SetValue(value); }
         }
 
@@ -38,9 +39,12 @@ namespace Pishi_Stiray.ViewModels
             _userService = userService;
             _schemaContext = schemaContext;
             _cartService = cartService;
-            cart = new ObservableCollection<ProductDB>(_cartService.cart);
+            if(cartService.cart != null)
+            {
+                cart = new ObservableDictionary<ProductDB, int>(_cartService.cart);
+                UpdateCart();
+            }
             Profile();
-            UpdateCart();
         }
 
         public ICommand CartRemove
@@ -49,7 +53,14 @@ namespace Pishi_Stiray.ViewModels
             {
                 return new DelegateCommand(() =>
                 {
-                    cart.Remove(SelectedItem);
+                    if (SelectedItem.Value > 1)
+                    {
+                        cart[SelectedItem.Key] = SelectedItem.Value - 1;
+                    }
+                    else
+                    {
+                        cart.Remove(SelectedItem.Key);
+                    }
                     UpdateCart();
                 });
             }
@@ -57,8 +68,8 @@ namespace Pishi_Stiray.ViewModels
 
         public void UpdateCart()
         {
-            CartCount = cart.Count;
-            Price = (float?)Math.Round((decimal)cart.Sum(x => x.DisplayedPrice), 2);
+            CartCount = cart.Sum(x => x.Value);
+            Price = (float?)Math.Round((decimal)cart.Sum(x => x.Key.DisplayedPrice * x.Value), 2);
         }
 
         public void Profile()

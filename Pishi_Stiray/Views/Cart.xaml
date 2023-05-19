@@ -55,7 +55,7 @@
                 </TextBlock>
             </Border>
         </Grid>
-        <ListView DockPanel.Dock="Bottom" ItemsSource="{Binding cart, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" SelectedItem="{Binding SelectedItem}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+        <ListView DockPanel.Dock="Bottom" ItemsSource="{Binding cart, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" SelectedItem = "{Binding SelectedItem}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <ListView.ContextMenu>
                 <ContextMenu>
                     <ContextMenu.Style>
@@ -92,22 +92,22 @@
                             <ColumnDefinition Width="2*"/>
                             <ColumnDefinition Width="1*"/>
                         </Grid.ColumnDefinitions>
-                        <Rectangle RadiusX="3" RadiusY="3" Grid.ColumnSpan="3" Fill="{Binding Discount, Converter={StaticResource StringToBrushConverter}}"/>
-                        <Image Width="100" Height="100" Margin="5" Source="{Binding DisplayedImage}" Grid.Column="0"/>
+                        <Rectangle RadiusX="3" RadiusY="3" Grid.ColumnSpan="3" Fill="{Binding Key.Discount, Converter={StaticResource StringToBrushConverter}}"/>
+                        <Image Width="100" Height="100" Margin="5" Source="{Binding Key.DisplayedImage}" Grid.Column="0"/>
                         <StackPanel VerticalAlignment="Center" Grid.Column="1">
-                            <TextBlock FontSize="14" Text="{Binding Title}" FontWeight="Bold"/>
-                            <TextBlock TextWrapping="Wrap" Text="{Binding Description}"/>
-                            <TextBlock TextWrapping="Wrap" Text="{Binding Manufacturer, StringFormat={}Производитель: {0}}"/>
+                            <TextBlock FontSize="14" Text="{Binding Key.Title}" FontWeight="Bold"/>
+                            <TextBlock TextWrapping="Wrap" Text="{Binding Key.Description}"/>
+                            <TextBlock TextWrapping="Wrap" Text="{Binding Key.Manufacturer, StringFormat={}Производитель: {0}}"/>
                             <TextBlock TextWrapping="Wrap">
                                 <TextBlock.Inlines>
                                     <Run Text="Цена:"/>
-                                    <Run Text="{Binding Price, StringFormat={}{0:C}, ConverterCulture=ru-RU}"
-                                                TextDecorations="{Binding Discount, Converter={StaticResource ValueToTextDecorationsConverter}}"/>
-                                    <Run Text="{Binding DisplayedPrice, StringFormat={}{0:C}, ConverterCulture=ru-RU, Mode=OneWay}"/>
+                                    <Run Text="{Binding Key.Price, StringFormat={}{0:C}, ConverterCulture=ru-RU}"
+                                                TextDecorations="{Binding Key.Discount, Converter={StaticResource ValueToTextDecorationsConverter}}"/>
+                                    <Run Text="{Binding Key.DisplayedPrice, StringFormat={}{0:C}, ConverterCulture=ru-RU, Mode=OneWay}"/>
                                 </TextBlock.Inlines>
                             </TextBlock>
                         </StackPanel>
-                        <TextBlock x:Name="disc" Text="{Binding Discount, StringFormat={}Скидка: {0}%}" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="disc" Text="{Binding Key.Discount, StringFormat={}Скидка: {0}%}" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
