@@ -10,11 +10,12 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Pishi_Stiray.ViewModels
 {
-    public class CartViewModel : ViewModelBase, INotifyPropertyChanged
+    public class CartViewModel : ViewModelBase
     {
         private readonly PageService _pageService;
         private readonly UserService _userService;
@@ -45,6 +46,27 @@ namespace Pishi_Stiray.ViewModels
                 UpdateCart();
             }
             Profile();
+        }
+
+        public ICommand CartAdd
+        {
+            get
+            {
+                return new DelegateCommand(() =>
+                {
+                    if (SelectedItem.Key.Quantity > cart[SelectedItem.Key])
+                    {
+                        int count;
+                        cart.TryGetValue(SelectedItem.Key, out count);
+                        cart[SelectedItem.Key] = count + 1;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Товары кончились");
+                    }
+                    UpdateCart();
+                });
+            }
         }
 
         public ICommand CartRemove
