@@ -8,17 +8,58 @@
       FontFamily="Comic Sans MS"
       DataContext="{Binding CartViewModel, Source={StaticResource ViewModelLocator}}"
       d:DesignHeight="750" d:DesignWidth="1300"
+      x:Name="UI"
       Title="Cart">
 
     <DockPanel Background="White">
         <Grid DockPanel.Dock="Top">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
-            <StackPanel Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10 0 0 0">
+            <Border Padding="10" CornerRadius="3" HorizontalAlignment="Left" Margin="0 0 0 5" VerticalAlignment="Center" Width="auto" Grid.Column="0">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#498c51"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="False">
+                                <Setter Property="Background" Value="#76e383"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <Button Background="Transparent" BorderThickness="0" Command="{Binding BackCommand}">
+                    <Button.Content>
+                        <TextBlock TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"  FontWeight="Heavy" Text="Назад в магазин"/>
+                    </Button.Content>
+                </Button>
+            </Border>
+            <Border Padding="10" CornerRadius="3" HorizontalAlignment="Right" Margin="0 0 0 5" VerticalAlignment="Center" Width="auto" Grid.Column="1">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#498c51"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="False">
+                                <Setter Property="Background" Value="#76e383"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <Button Background="Transparent" BorderThickness="0" Command="{Binding OrderCommand}">
+                    <Button.Content>
+                        <TextBlock TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"  FontWeight="Heavy" Text="Заказать"/>
+                    </Button.Content>
+                </Button>
+            </Border>
+            <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10 0 0 0">
                 <TextBlock FontSize="16" FontWeight="Bold" Text="{Binding CartCount, StringFormat={}Кол-во товаров в корзине: {0}}"/>
                 <TextBlock FontSize="16" FontWeight="Bold" Text="{Binding Price, StringFormat={}Стоимость: {0}}"/>
+                <TextBlock FontSize="16" FontWeight="Bold" Text="{Binding Sale, StringFormat={}Сумма скидки: {0}}"/>
             </StackPanel>
             <Border Padding="10" CornerRadius="3" HorizontalAlignment="Right" Margin="0 0 15 5" VerticalAlignment="Center" Width="auto" Grid.Column="2">
                 <Border.Style>
@@ -55,7 +96,7 @@
                 </TextBlock>
             </Border>
         </Grid>
-        <ListView x:Name="LV" DockPanel.Dock="Bottom" ItemsSource="{Binding cart, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" SelectedItem = "{Binding SelectedItem}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+        <ListView x:Name="LV" DockPanel.Dock="Bottom" ItemsSource="{Binding cart, UpdateSourceTrigger=PropertyChanged}" SelectedItem = "{Binding SelectedItem}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <ListBox.ItemContainerStyle>
                 <Style TargetType="ListBoxItem">
                     <Style.Triggers>
@@ -78,25 +119,25 @@
                             <ColumnDefinition Width="2*"/>
                             <ColumnDefinition Width="1*"/>
                         </Grid.ColumnDefinitions>
-                        <Rectangle RadiusX="3" RadiusY="3" Grid.ColumnSpan="3" Fill="{Binding Key.Discount, Converter={StaticResource StringToBrushConverter}}"/>
-                        <Image Width="100" Height="100" Margin="5" Source="{Binding Key.DisplayedImage}" Grid.Column="0"/>
+                        <Rectangle RadiusX="3" RadiusY="3" Grid.ColumnSpan="3" Fill="{Binding Product.Discount, Converter={StaticResource StringToBrushConverter}}"/>
+                        <Image Width="100" Height="100" Margin="5" Source="{Binding Product.DisplayedImage}" Grid.Column="0"/>
                         <StackPanel VerticalAlignment="Center" Grid.Column="1">
-                            <TextBlock FontSize="14" Text="{Binding Key.Title}" FontWeight="Bold"/>
-                            <TextBlock TextWrapping="Wrap" Text="{Binding Key.Description}"/>
-                            <TextBlock TextWrapping="Wrap" Text="{Binding Key.Manufacturer, StringFormat={}Производитель: {0}}"/>
+                            <TextBlock FontSize="14" Text="{Binding Product.Title}" FontWeight="Bold"/>
+                            <TextBlock TextWrapping="Wrap" Text="{Binding Product.Description}"/>
+                            <TextBlock TextWrapping="Wrap" Text="{Binding Product.Manufacturer, StringFormat={}Производитель: {0}}"/>
                             <TextBlock TextWrapping="Wrap">
                                 <TextBlock.Inlines>
                                     <Run Text="Цена:"/>
-                                    <Run Text="{Binding Key.Price, StringFormat={}{0:C}, ConverterCulture=ru-RU}"
+                                    <Run Text="{Binding Product.Price, StringFormat={}{0:C}, ConverterCulture=ru-RU}"
                                                 TextDecorations="{Binding Key.Discount, Converter={StaticResource ValueToTextDecorationsConverter}}"/>
-                                    <Run Text="{Binding Key.DisplayedPrice, StringFormat={}{0:C}, ConverterCulture=ru-RU, Mode=OneWay}"/>
+                                    <Run Text="{Binding Product.DisplayedPrice, StringFormat={}{0:C}, ConverterCulture=ru-RU, Mode=OneWay}"/>
                                 </TextBlock.Inlines>
                             </TextBlock>
                         </StackPanel>
-                        <TextBlock x:Name="disc" Text="{Binding Key.Discount, StringFormat={}Скидка: {0}%}" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        <WrapPanel  Grid.Column="2"  HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0 0 0 10">
+                        <TextBlock x:Name="disc" Text="{Binding Product.Discount, StringFormat={}Скидка: {0}%}" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <WrapPanel Grid.Column="2"  HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0 0 0 10">
                             <Button Content="-" Command="{Binding ElementName=LV, Path=DataContext.CartRemove}" Style="{StaticResource TextButtonStyle}" FontSize="30" Width="35" Height="35"/>
-                            <TextBlock Text="{Binding Value}" VerticalAlignment="Bottom" FontSize="18"/>
+                            <TextBlock Text="{Binding Count, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Bottom" FontSize="18"/>
                             <Button Content="+" Command="{Binding ElementName=LV, Path=DataContext.CartAdd}" Style="{StaticResource TextButtonStyle}" FontSize="30" Width="35" Height="35" />
                         </WrapPanel>
                     </Grid>

@@ -1,8 +1,9 @@
 ﻿using DevExpress.Mvvm;
-using FluentNHibernate.Utils;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 using Pishi_Stiray.Data;
 using Pishi_Stiray.Models;
 using Pishi_Stiray.Services;
+using Pishi_Stiray.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -25,15 +26,9 @@ namespace Pishi_Stiray.ViewModels
         public int CartCount { get; set; } = 0;
         public string ProfileInfo { get; set; }
         public string ProfileButton { get; set; }
-        public ObservableDictionary<ProductDB, int> cart { get; set; }
+        public ObservableCollection<CartModel> cart { get; set; }
         public float? Price { get; set; }
-
-        public KeyValuePair<ProductDB, int> SelectedItem
-        {
-            get { return GetValue<KeyValuePair<ProductDB, int>>(); }
-            set { SetValue(value); }
-        }
-
+        public float Sale { get; set; }
         public CartViewModel(PageService pageService, UserService userService, NewSchemaContext schemaContext, CartService cartService)
         {
             _pageService = pageService;
@@ -42,10 +37,15 @@ namespace Pishi_Stiray.ViewModels
             _cartService = cartService;
             if(cartService.cart != null)
             {
-                cart = new ObservableDictionary<ProductDB, int>(_cartService.cart);
+                cart = new ObservableCollection<CartModel>(_cartService.cart);
                 UpdateCart();
             }
             Profile();
+        }
+        public CartModel? SelectedItem
+        {
+            get { return GetValue<CartModel>(); }
+            set { SetValue(value); }
         }
 
         public ICommand CartAdd
@@ -54,16 +54,15 @@ namespace Pishi_Stiray.ViewModels
             {
                 return new DelegateCommand(() =>
                 {
-                    if (SelectedItem.Key.Quantity > cart[SelectedItem.Key])
+                    if (SelectedItem.Product.Quantity > cart.SingleOrDefault(x => x.Product == SelectedItem.Product).Count)
                     {
-                        int count;
-                        cart.TryGetValue(SelectedItem.Key, out count);
-                        cart[SelectedItem.Key] = count + 1;
+                        cart.SingleOrDefault(x => x.Product == SelectedItem.Product).Count += 1;
                     }
                     else
                     {
                         MessageBox.Show("Товары кончились");
                     }
+                    
                     UpdateCart();
                 });
             }
@@ -75,23 +74,37 @@ namespace Pishi_Stiray.ViewModels
             {
                 return new DelegateCommand(() =>
                 {
-                    if (SelectedItem.Value > 1)
+                    if (cart.SingleOrDefault(x => x.Product == SelectedItem.Product).Count > 1)
                     {
-                        cart[SelectedItem.Key] = SelectedItem.Value - 1;
+                        cart.SingleOrDefault(x => x.Product == SelectedItem.Product).Count -= 1;
+
                     }
                     else
                     {
-                        cart.Remove(SelectedItem.Key);
+                        cart.Remove(SelectedItem);
                     }
                     UpdateCart();
                 });
             }
         }
 
+        public ICommand BackCommand
+        {
+            get
+            {
+                return new DelegateCommand(() =>
+                {
+                    _pageService.ChangePage(new BrowseProduct());
+                });
+            }
+        }
+
         public void UpdateCart()
         {
-            CartCount = cart.Sum(x => x.Value);
-            Price = (float?)Math.Round((decimal)cart.Sum(x => x.Key.DisplayedPrice * x.Value), 2);
+            _cartService.cart = cart;
+            CartCount = cart.Sum(x => x.Count);
+            Price = (float)Math.Round((decimal)cart.Sum(x => x.Product.DisplayedPrice * x.Count),2);
+            Sale = (float)Math.Round((decimal)cart.Sum(x => x.Product.Price / 100 * x.Product.Discount * x.Count),2);
         }
 
         public void Profile()

@@ -1,5 +1,7 @@
 ﻿using DevExpress.Mvvm;
 using DevExpress.Mvvm.Native;
+using FluentNHibernate.Utils;
+using NHibernate.Type;
 using Pishi_Stiray.Data;
 using Pishi_Stiray.Data.Models;
 using Pishi_Stiray.Models;
@@ -7,6 +9,7 @@ using Pishi_Stiray.Services;
 using Pishi_Stiray.Views;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,7 +30,7 @@ namespace Pishi_Stiray.ViewModels
         public List<string> Sorts { get; set; } = new() { "По возрастанию", "По убыванию" };
         public List<string> Filters { get; set; } = new() { "Все диапазоны", "0-5%", "5-9%", "9% и более" };
         public List<ProductDB> products { get; set; }
-        public Dictionary<ProductDB, int> productsCart { get; set; } = new Dictionary<ProductDB,int>();
+        public ObservableCollection<CartModel> productsCart { get; set; } = new ObservableCollection<CartModel>();
         public float? CartCount { get; set; } = 0;
         public int ProductsCount { get; set; } = 0;
         public int ProductsAllCount { get; set; } = 0;
@@ -60,6 +63,11 @@ namespace Pishi_Stiray.ViewModels
             _schemaContext = schemaContext;
             _pageService = pageService;
             _cartService = cartService;
+            if (_cartService.cart is not null)
+            {
+                productsCart = _cartService.cart;
+                CartUpdate();
+            }
             UpdateProduct();
             Profile();
         }
@@ -93,13 +101,11 @@ namespace Pishi_Stiray.ViewModels
             {
                 return new DelegateCommand(() =>
                 {
-                    if (productsCart.ContainsKey(SelectedItem))
+                    if (productsCart.Any(x => x.Product == SelectedItem))
                     {
-                        if(SelectedItem.Quantity > productsCart[SelectedItem])
+                        if(SelectedItem.Quantity > productsCart.SingleOrDefault(x => x.Product == SelectedItem).Count)
                         {
-                            int count;
-                            productsCart.TryGetValue(SelectedItem, out count);
-                            productsCart[SelectedItem] = count + 1;
+                            productsCart.SingleOrDefault(x => x.Product == SelectedItem).Count += 1;
                         }
                         else
                         {
@@ -108,10 +114,9 @@ namespace Pishi_Stiray.ViewModels
                     }
                     else
                     {
-                        productsCart.Add(SelectedItem, 1);
+                        productsCart.Add(new CartModel(SelectedItem, 1));
                     }
-                    _cartService.cart = productsCart;
-                    CartCount = (float?)Math.Round((decimal)productsCart.Sum(x => x.Key.DisplayedPrice * x.Value), 2);
+                    CartUpdate();
                 });
             }
         }
@@ -123,19 +128,19 @@ namespace Pishi_Stiray.ViewModels
                 return new DelegateCommand(() =>
                 {
                     
-                    if (!productsCart.ContainsKey(SelectedItem))
+                    if (!productsCart.Any(x => x.Product == SelectedItem))
                     {
                         MessageBox.Show("Этого товара нет в корзине");
                     }
-                    else if (productsCart[SelectedItem] > 1)
+                    else if (productsCart.SingleOrDefault(x => x.Product == SelectedItem).Count > 1)
                     {
-                        productsCart[SelectedItem] = productsCart[SelectedItem] - 1;
+                        productsCart.SingleOrDefault(x => x.Product == SelectedItem).Count -= 1;
                     }
                     else
                     {
-                        productsCart.Remove(SelectedItem);
+                        productsCart.Remove(productsCart.SingleOrDefault(x => x.Product == SelectedItem));
                     }
-                    CartCount = (float?)Math.Round((decimal)productsCart.Sum(x => x.Key.DisplayedPrice * x.Value), 2);
+                    CartUpdate();
                 });
             }
         }
@@ -152,6 +157,13 @@ namespace Pishi_Stiray.ViewModels
                 _schemaContext.Roles.ToList();
                 ProfileInfo = $"ФИО: {_userService.UserInfo.UserSurname} {_userService.UserInfo.UserName[0]}. {_userService.UserInfo.UserPatronymic[0]}.\nРоль: {_userService.UserInfo.UserRoleNavigation.RoleName}";
             }
+        }
+
+        public void CartUpdate()
+        {
+            
+            _cartService.cart = productsCart;
+            CartCount = (float?)Math.Round((decimal)productsCart.Sum(x => x.Product.DisplayedPrice * x.Count), 2);
         }
 
         public void UpdateProduct()
