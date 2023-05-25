@@ -11,8 +11,29 @@
       Title="ClientOrder">
 
     <Grid Background="White">
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-            <TextBlock Text="Спасибо за заказ" FontSize="22"/>
+        <StackPanel MaxWidth="500" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <StackPanel Background="White" x:Name="CheckPrint">
+                <TextBlock  Text="Спасибо за заказ" FontSize="22" HorizontalAlignment="Center"/>
+                <TextBlock  Text="{Binding User}" FontSize="18" HorizontalAlignment="Center"/>
+                <TextBlock Text="{Binding OrderDate}" FontSize="16" HorizontalAlignment="Center"/>
+                <DataGrid IsReadOnly="True" ColumnWidth="0.25*" AutoGenerateColumns="False" ItemsSource="{Binding order}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Артикул" Binding="{Binding Article}"/>
+                        <DataGridTextColumn Header="Название" Binding="{Binding Title}"/>
+                        <DataGridTextColumn Header="Кол-во" Binding="{Binding Count}"/>
+                        <DataGridTextColumn Header="Цена" Binding="{Binding Price}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <TextBlock FontSize="16" HorizontalAlignment="Center">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}Сумма: {0}₽ | Итоговая скидка: {1}₽">
+                            <Binding Path="OrderSum"/>
+                            <Binding Path="OrderSumSale"/>
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+            </StackPanel>
+            <Button Content="Печать" Style="{StaticResource ButtonStyle}" HorizontalAlignment="Center" Command="{Binding PrintCommand, Mode=OneWay}" CommandParameter="{Binding ElementName=CheckPrint, Mode=OneWay}"/>
         </StackPanel>
     </Grid>
 </Page>

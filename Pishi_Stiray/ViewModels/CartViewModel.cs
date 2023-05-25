@@ -121,5 +121,17 @@ namespace Pishi_Stiray.ViewModels
                 ProfileInfo = $"ФИО: {_userService.UserInfo.UserSurname} {_userService.UserInfo.UserName[0]}. {_userService.UserInfo.UserPatronymic[0]}.\nРоль: {_userService.UserInfo.UserRoleNavigation.RoleName}";
             }
         }
+
+        public ICommand OrderCommand
+        {
+            get
+            {
+                return new DelegateCommand(() =>
+                {
+                    _cartService.cart = cart;
+                    _pageService.ChangePage(new ClientOrder());
+                });
+            }
+        }
     }
 }

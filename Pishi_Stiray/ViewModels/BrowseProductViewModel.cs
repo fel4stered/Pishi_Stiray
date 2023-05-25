@@ -204,5 +204,7 @@ namespace Pishi_Stiray.ViewModels
             products = currentProducts;
             ProductsCount = products.Count;
         }
+
+        
     }
 }
