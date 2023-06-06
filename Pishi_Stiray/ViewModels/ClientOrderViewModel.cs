@@ -1,8 +1,7 @@
-﻿using CommunityToolkit.Mvvm.DependencyInjection;
+﻿using C1.WPF.Pdf;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using DevExpress.Mvvm;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
-using iTextSharp.text.pdf.parser;
+using Microsoft.Win32;
 using NHibernate.Mapping.ByCode;
 using Pishi_Stiray.Models;
 using Pishi_Stiray.Services;
@@ -12,6 +11,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,6 +20,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
+using System.Xml.Linq;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace Pishi_Stiray.ViewModels
@@ -38,7 +39,7 @@ namespace Pishi_Stiray.ViewModels
 
         public string OrderSumSale { get; set; }
 
-        public DateTime OrderDate { get; set; }
+        public string OrderDate { get; set; }
         public Visual print { get; }
 
         public ClientOrderViewModel(UserService userService, CartService cartService, PageService pageService)
@@ -61,37 +62,55 @@ namespace Pishi_Stiray.ViewModels
 
             OrderSum = Math.Round((decimal)_cartService.cart.Sum(x => x.Product.DisplayedPrice * x.Count), 2).ToString();
             OrderSumSale = Math.Round((decimal)_cartService.cart.Sum(x => x.Product.Price / 100 * x.Product.Discount * x.Count), 2).ToString();
-            OrderDate = DateTime.Now;
+            OrderDate = DateTime.Now.ToString("G");
         }
 
-        public ICommand<UIElement> PrintCommand
+        public ICommand<FrameworkElement> PrintCommand
         {
             get
             {
-                return new DelegateCommand<UIElement>(visual =>
+                return new DelegateCommand<FrameworkElement>(element =>
                 {
-                    double w = visual.RenderSize.Width;
-                    double h = visual.RenderSize.Height;
-                    double dpiScale = 300.0 / 99.9;
-                    double dpiX = 300.0;
-                    double dpiY = 300.0;
-                    var renderTargetBitmap = new RenderTargetBitmap(Convert.ToInt32((w) * dpiScale), Convert.ToInt32((h) * dpiScale), dpiX, dpiY, PixelFormats.Pbgra32);
-                    renderTargetBitmap.Render(visual);
-                    MemoryStream stream = new MemoryStream();
-                    BitmapEncoder encoder = new BmpBitmapEncoder();
-                    encoder.Frames.Add(BitmapFrame.Create(renderTargetBitmap));
-                    encoder.Save(stream);
+                    var dlg = new SaveFileDialog();
+                    dlg.DefaultExt = ".pdf";
+                    var dr = dlg.ShowDialog();
+                    if (!dr.HasValue || !dr.Value)
+                    {
+                        return;
+                    }
 
-                    Bitmap bitmap = new Bitmap(stream);
-                    bitmap = new Bitmap(bitmap, new System.Drawing.Size(bitmap.Width /2, bitmap.Height/2));
-                    Document doc = new Document();
-                    PdfWriter.GetInstance(doc, new FileStream("image.pdf", FileMode.Create));
-                    doc.Open();
-                    iTextSharp.text.Image pdfImage = iTextSharp.text.Image.GetInstance(bitmap, System.Drawing.Imaging.ImageFormat.Jpeg);
-                    doc.Add(pdfImage);
-                    doc.Close();
+                    var pdf = new C1PdfDocument();
+                    pdf.PageSize = new System.Windows.Size(element.RenderSize.Width/2, element.RenderSize.Height/2);
+                    pdf.Clear();
+
+                    var img = new WriteableBitmap(CreateBitmap(element));
+
+                    pdf.DrawImage(img, pdf.PageRectangle, C1.WPF.Pdf.ContentAlignment.TopCenter, Stretch.Uniform);
+
+                    // save document  
+                    using (var stream = dlg.OpenFile())
+                    {
+                        pdf.Save(stream);
+                    }
+                    MessageBox.Show(dlg.SafeFileName + " saved successfully!");
+
                 });
             }
         }
+
+        public BitmapSource CreateBitmap(FrameworkElement element)
+        {
+            int width = (int)Math.Ceiling(element.ActualWidth);
+            int height = (int)Math.Ceiling(element.ActualHeight);
+
+            width = width == 0 ? 1 : width;
+            height = height == 0 ? 1 : height;
+
+            // render element to image (WPF)  
+            RenderTargetBitmap rtbmp = new RenderTargetBitmap(width, height, 96, 96, PixelFormats.Default);
+            rtbmp.Render(element);
+            return rtbmp;
+        }
+
     }
 }

@@ -13,6 +13,8 @@ namespace Pishi_Stiray.Services
     {
         private readonly NewSchemaContext _schemaContext;
 
+        public ProductDB SelectedItem { get; set; }
+
         public ProductService(NewSchemaContext schemaContext)
         {
             _schemaContext = schemaContext;
@@ -40,6 +42,21 @@ namespace Pishi_Stiray.Services
                 } );
             }
             return products;
+        }
+
+        public List<Pname> GetPnames(ProductDB product)
+        {
+            List<Pname> pnames = _schemaContext.Pnames.ToList();
+            return pnames;
+        }
+
+        public void EditProducts(ProductDB productEdit)
+        {
+            Product product = new Product()
+            {
+                ProductArticleNumber = productEdit.Article,
+                ProductPhoto = productEdit.Image
+            }
         }
     }
 }

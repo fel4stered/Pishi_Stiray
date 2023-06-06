@@ -32,15 +32,26 @@
                             <Trigger Property="IsMouseOver" Value="False">
                                 <Setter Property="Background" Value="#76e383"/>
                             </Trigger>
-                            <DataTrigger Binding="{Binding ProfileInfo}" Value="Вы вошли как Гость">
+                            <DataTrigger Binding="{Binding RoleID}" Value="0">
                                 <Setter Property="Visibility" Value="Hidden"/>
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
                 </Border.Style>
-                <Button Background="Transparent" BorderThickness="0" Command="{Binding CartCommand}">
+                <Button x:Name="CartBut" Background="Transparent" BorderThickness="0" Command="{Binding CartCommand}">
                     <Button.Content>
-                        <TextBlock TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"  FontWeight="Heavy" Text="{Binding CartCount, StringFormat={}Корзина: {0}₽}"/>
+                        <TextBlock TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"  FontWeight="Heavy">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Text" Value="Заказы"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding RoleID}" Value="2">
+                                            <Setter Property="Text" Value="{Binding ElementName=CartBut, Path=DataContext.CartCount, StringFormat={}Корзина: {0}₽}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
                     </Button.Content>
                 </Button>
             </Border>
@@ -126,17 +137,35 @@
                             </TextBlock>
                         </StackPanel>
                         <TextBlock x:Name="disc" Text="{Binding Discount, StringFormat={}Скидка: {0}%}" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        <WrapPanel  Grid.Column="2"  HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0 0 0 10">
+                        <Button Content="✎" Command="{Binding ElementName=LV, Path=DataContext.EditCommand}" FontSize="20" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0 0 0 10">
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource TextButtonStyle}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ElementName=LV, Path=DataContext.RoleID}" Value="2">
+                                            <Setter Property="Visibility" Value="Hidden"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                        <WrapPanel  Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0 0 0 10">
                             <WrapPanel.Style>
                                 <Style TargetType="WrapPanel">
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding ElementName=LV, Path=DataContext.ProfileInfo}" Value="Вы вошли как Гость">
+                                        <DataTrigger Binding="{Binding ElementName=LV, Path=DataContext.RoleID}" Value="0">
+                                            <Setter Property="Visibility" Value="Hidden"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ElementName=LV, Path=DataContext.RoleID}" Value="1">
+                                            <Setter Property="Visibility" Value="Hidden"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ElementName=LV, Path=DataContext.RoleID}" Value="3">
                                             <Setter Property="Visibility" Value="Hidden"/>
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
                             </WrapPanel.Style>
                             <Button Content="-" Command="{Binding ElementName=LV, Path=DataContext.CartRemove}" Style="{StaticResource TextButtonStyle}" FontSize="30" Width="35" Height="35"/>
+                            
                             <Button Content="+" Command="{Binding ElementName=LV, Path=DataContext.CartAdd}" Style="{StaticResource TextButtonStyle}" FontSize="30" Width="35" Height="35" />
                         </WrapPanel>
                     </Grid>

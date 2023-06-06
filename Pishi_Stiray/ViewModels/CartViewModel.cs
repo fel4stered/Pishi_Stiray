@@ -128,6 +128,7 @@ namespace Pishi_Stiray.ViewModels
             {
                 return new DelegateCommand(() =>
                 {
+
                     _cartService.cart = cart;
                     _pageService.ChangePage(new ClientOrder());
                 });

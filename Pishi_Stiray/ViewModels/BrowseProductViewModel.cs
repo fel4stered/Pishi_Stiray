@@ -26,6 +26,8 @@ namespace Pishi_Stiray.ViewModels
         private readonly NewSchemaContext _schemaContext;
         private readonly PageService _pageService;
         private readonly CartService _cartService;
+
+        public int RoleID { get; set; }
         public string ProfileButton { get; set; }
         public List<string> Sorts { get; set; } = new() { "По возрастанию", "По убыванию" };
         public List<string> Filters { get; set; } = new() { "Все диапазоны", "0-5%", "5-9%", "9% и более" };
@@ -76,11 +78,20 @@ namespace Pishi_Stiray.ViewModels
         {
             get
             {
-                return new DelegateCommand(() =>
-                {
-                    _pageService.ChangePage(new Cart());
-                });
+                    return new DelegateCommand(() =>
+                    {
+                        _pageService.ChangePage(new Cart());
+                    });
             }
+        }
+
+        public ICommand EditCommand
+        {
+            get => new DelegateCommand(() =>
+            {
+                _productService.SelectedItem = SelectedItem;
+                _pageService.ChangePage(new EditProduct());
+            });
         }
 
         public ICommand ProfileExit
@@ -148,11 +159,13 @@ namespace Pishi_Stiray.ViewModels
         {
             if(_userService.UserInfo is null)
             {
+                RoleID = 0;
                 ProfileInfo = "Вы вошли как Гость";
                 ProfileButton = "Войти";
             }
             else
             {
+                RoleID = _userService.UserInfo.UserRole;
                 ProfileButton = "Выйти";
                 _schemaContext.Roles.ToList();
                 ProfileInfo = $"ФИО: {_userService.UserInfo.UserSurname} {_userService.UserInfo.UserName[0]}. {_userService.UserInfo.UserPatronymic[0]}.\nРоль: {_userService.UserInfo.UserRoleNavigation.RoleName}";
