@@ -22,11 +22,12 @@
                         <DataGridTextColumn Header="Название" Binding="{Binding Title}"/>
                         <DataGridTextColumn Header="Кол-во" Binding="{Binding Count}"/>
                         <DataGridTextColumn Header="Цена" Binding="{Binding Price}"/>
+                        <DataGridTextColumn Header="Сумма" Binding="{Binding Sum}"/>
                     </DataGrid.Columns>
                 </DataGrid>
                 <TextBlock FontSize="16" HorizontalAlignment="Center">
                     <TextBlock.Text>
-                        <MultiBinding StringFormat="{}Сумма: {0}₽ | Итоговая скидка: {1}₽">
+                        <MultiBinding StringFormat="{}Итоговая сумма: {0}₽ | Итоговая скидка: {1}₽">
                             <Binding Path="OrderSum"/>
                             <Binding Path="OrderSumSale"/>
                         </MultiBinding>

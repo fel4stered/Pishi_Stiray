@@ -87,12 +87,11 @@ namespace Pishi_Stiray.ViewModels
 
                     pdf.DrawImage(img, pdf.PageRectangle, C1.WPF.Pdf.ContentAlignment.TopCenter, Stretch.Uniform);
 
-                    // save document  
                     using (var stream = dlg.OpenFile())
                     {
                         pdf.Save(stream);
                     }
-                    MessageBox.Show(dlg.SafeFileName + " saved successfully!");
+                    MessageBox.Show(dlg.SafeFileName + " чек сохранён!");
 
                 });
             }

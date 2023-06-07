@@ -12,7 +12,7 @@ namespace Pishi_Stiray.Models
         public string Image { get; set; }
         public string DisplayedImage
         {
-            get { return ($@"pack://application:,,,/Resources/Images/{Image}"); }
+            get { return $"pack://application:,,,/Resources/Images/{Image}"; }
         }
         public string Title { get; set; }
         public string Description { get; set; }
@@ -21,7 +21,7 @@ namespace Pishi_Stiray.Models
         public int Discount { get; set; }
         public int Quantity { get; set; }
         public string Article { get; set; }
-        public int Count { get; set; }
+        public string Category { get; set; }
         public float? DisplayedPrice
         {
             get

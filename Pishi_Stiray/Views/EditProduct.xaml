@@ -11,21 +11,24 @@
       Title="EditProduct">
 
     <StackPanel Background="White">
-        <Image Source="{Binding SelectedItem.DisplayedImage}" Height="100" Width="100" HorizontalAlignment="Center"/>
+        <Button Style="{StaticResource ButtonStyle}" Command="{Binding EditImageCommand}" HorizontalAlignment="Center" Content="Изменить картинку"/>
+        <TextBox Text="{Binding SelectedItem.DisplayedImage, Mode=OneWay}" HorizontalAlignment="Center"/>
         <TextBlock Text="Артикул:" HorizontalAlignment="Center"/>
-        <TextBox Style="{StaticResource TextBoxStyle}" Text="{Binding SelectedItem.Article}" HorizontalAlignment="Center"/>
+        <TextBox IsReadOnly="True" Style="{StaticResource TextBoxStyle}" Text="{Binding SelectedItem.Article}" HorizontalAlignment="Center"/>
         <TextBlock Text="Название:" HorizontalAlignment="Center"/>
         <TextBox Style="{StaticResource TextBoxStyle}" Text="{Binding SelectedItem.Title}" HorizontalAlignment="Center"/>
         <TextBlock Text="Описание:" HorizontalAlignment="Center"/>
         <TextBox Style="{StaticResource TextBoxStyle}" Text="{Binding SelectedItem.Description}" HorizontalAlignment="Center"/>
         <TextBlock Text="Производитель:" HorizontalAlignment="Center"/>
         <TextBox Style="{StaticResource TextBoxStyle}" Text="{Binding SelectedItem.Manufacturer}" HorizontalAlignment="Center"/>
+        <TextBlock Text="Категория:" HorizontalAlignment="Center"/>
+        <ComboBox ItemsSource="{Binding Categories}" HorizontalAlignment="Center" Style="{StaticResource ComboBoxStyle}"/>
         <TextBlock Text="Цена:" HorizontalAlignment="Center"/>
         <TextBox Style="{StaticResource TextBoxStyle}" Text="{Binding SelectedItem.Price}" HorizontalAlignment="Center"/>
         <TextBlock Text="Скидка:" HorizontalAlignment="Center"/>
         <TextBox Style="{StaticResource TextBoxStyle}" Text="{Binding SelectedItem.Discount}" HorizontalAlignment="Center"/>
         <TextBlock Text="Кол-во:" HorizontalAlignment="Center"/>
         <TextBox Style="{StaticResource TextBoxStyle}" Text="{Binding SelectedItem.Quantity}" HorizontalAlignment="Center"/>
-        <Button Style="{StaticResource ButtonStyle}" HorizontalAlignment="Center" Content="Изменить"/>
+        <Button Style="{StaticResource ButtonStyle}" Command="{Binding EditCommand}" HorizontalAlignment="Center" Content="Изменить"/>
     </StackPanel>
 </Page>
